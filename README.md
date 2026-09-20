@@ -12,12 +12,10 @@ O banco registra pessoas (alunos e professores, com especialização total e exc
 
 ## Integrantes
 
-| Nome | Matrícula | Papel principal |
-|---|---|---|
-| Daniel Santos Correa Moura | UC25100419 | Analista de domínio e administrador do banco — **interlocutor** |
-| Helenna Sales Teixeira Alves | UC23103128 | Modeladora de dados e desenvolvedora da aplicação (Etapa 2) |
-
-Os quatro papéis sugeridos no item 3 do enunciado foram distribuídos entre os dois integrantes, duas frentes para cada um. Como o próprio enunciado registra, a divisão é organizacional: na apresentação qualquer integrante responde por qualquer parte do trabalho.
+| Nome | Matrícula |
+|---|---|
+| Daniel Santos Correa Moura | UC25100419 |
+| Helenna Sales Teixeira Alves | UC23103128 |
 
 ## Requisitos técnicos
 
