@@ -1,0 +1,21 @@
+# Este repositorio e versionado a partir do Windows, com core.autocrlf=true.
+# Sem as regras abaixo o git trata como texto qualquer arquivo que nao tenha
+# bytes NUL no inicio e converte LF em CRLF no checkout -- foi o que corrompeu
+# docs/mer-conceitual.pdf (11.802 -> 11.902 bytes, tabela xref quebrada num
+# clone limpo). Arquivos binarios ficam marcados explicitamente.
+
+*.pdf    binary
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.docx   binary
+*.pptx   binary
+*.xlsx   binary
+
+# Fontes de texto: normalizados com LF no repositorio, fim de linha nativo
+# na copia de trabalho.
+*.sql     text
+*.md      text
+*.py      text
+*.drawio  text
+*.txt     text
