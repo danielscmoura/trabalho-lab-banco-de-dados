@@ -20,9 +20,9 @@ SGBD: MySQL 8.0 | Notação: Engenharia da Informação (pé de galinha)
 
 ### Equipe
 
-| Nome | Matrícula | Papel principal |
-|---|---|---|
-| Daniel Santos Correa Moura | UC25100419 | Analista de domínio e administrador do banco — **interlocutor** |
-| Helenna Sales Teixeira Alves | UC23103128 | Modeladora de dados e desenvolvedora da aplicação (Etapa 2) |
+| Nome | Matrícula |
+|---|---|
+| Daniel Santos Correa Moura | UC25100419 |
+| Helenna Sales Teixeira Alves | UC23103128 |
 
-Repositório: [URL do repositório Git]
+Repositório: https://github.com/danielscmoura/trabalho-lab-banco-de-dados
