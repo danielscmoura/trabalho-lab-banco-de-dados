@@ -6,16 +6,24 @@ O diagrama está em `docs/mer-conceitual.pdf`, com arquivo-fonte editável em `d
 
 ## 2.1 Como ler o diagrama
 
-- **Pé de galinha** junto à entidade: cardinalidade **máxima N**. **Traço**: máxima 1.
-- **Círculo** no segundo símbolo: cardinalidade **mínima 0** (participação opcional). **Traço**: mínima 1 (participação obrigatória).
-- Caixas **azuis**: entidades fortes e subclasses. Caixas **verdes**: entidades associativas, geradas por relacionamentos N:N com atributos próprios. Caixa **laranja de borda dupla**: entidade fraca.
-- O círculo com **"d"** abaixo de PESSOA marca a especialização **disjunta**; a legenda indica que ela é também **total**.
+O diagrama está dividido em três blocos numerados, que agrupam o modelo por assunto: **1 — pessoas, subtipos e responsáveis**; **2 — estrutura acadêmica** (ano letivo, turmas, disciplinas e matrículas); **3 — avaliação e desempenho**. A convenção de leitura é a mesma nos três.
 
-Os relacionamentos N:N aparecem como entidades associativas, prática padrão da notação pé de galinha, que não dispõe de losango para atributos de relacionamento. Cada caixa verde corresponde, no modelo conceitual, a um relacionamento muitos-para-muitos — não a uma entidade do domínio.
+- **Pé de galinha** junto à entidade: cardinalidade **máxima N**. **Traço**: máxima 1.
+- **Círculo** no segundo símbolo: cardinalidade **mínima 0** (participação opcional). **Traço**: mínima 1 (participação obrigatória). A legenda traz os quatro pares possíveis — (1,1), (0,1), (1,N) e (0,N) — cada um com o símbolo correspondente.
+- A legenda distingue **quatro tipos de caixa**: entidade forte, **subtipo** (a especialização de PESSOA), **entidade associativa** (que resolve um N:N com atributos próprios) e **entidade fraca** (com identificador parcial).
+- Dentro de cada caixa, os atributos vêm marcados com **PK** (identificador primário), **FK** (chave estrangeira) e **UQ** (identificador alternativo). **UQ repetido na mesma entidade indica chave composta** — é assim que se lê, por exemplo, `(id_ano_letivo, codigo)` em TURMA.
+- O círculo com **"d"** abaixo de PESSOA marca a especialização **disjunta**; a legenda indica que ela é também **total**.
+- Atributos **derivados** (`idade`) e **compostos** (`endereco`) estão assinalados dentro da própria entidade.
+
+Os relacionamentos N:N aparecem como entidades associativas, prática padrão da notação pé de galinha, que não dispõe de losango para atributos de relacionamento. Cada caixa de entidade associativa corresponde, no modelo conceitual, a um relacionamento muitos-para-muitos — não a uma entidade do domínio.
+
+**RESPONSAVEL não é subtipo de PESSOA**, e a decisão está anotada no próprio diagrama: como a especialização de PESSOA é exclusiva, tratar o responsável como subtipo impediria que a mesma pessoa fosse responsável e professor — situação corriqueira numa escola. O responsável é, portanto, entidade própria, ligada ao aluno pela associativa ALUNO_RESPONSAVEL.
 
 ## 2.2 Entidades do modelo
 
 Nove entidades, sem contar as associativas: PESSOA, ALUNO, PROFESSOR, RESPONSAVEL, ANO_LETIVO, DISCIPLINA, TURMA, HISTORICO_SITUACAO_ALUNO e AVALIACAO. As cinco associativas são ALUNO_RESPONSAVEL, MATRICULA, ALOCACAO, NOTA e PRE_REQUISITO.
+
+O cabeçalho do diagrama anuncia **catorze entidades** porque conta todas as caixas desenhadas — as nove acima mais as cinco associativas. É o mesmo modelo, contado de dois jeitos: o requisito do enunciado fala em entidades *sem contar* as associativas, e nesse critério são nove.
 
 ## 2.3 Cardinalidades
 
