@@ -19,3 +19,7 @@
 *.py      text
 *.drawio  text
 *.txt     text
+*.js      text
+*.ejs     text
+*.css     text
+*.json    text

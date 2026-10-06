@@ -1,0 +1,54 @@
+<%- include('_cabecalho') %>
+<p class="intro">
+  Esta tela nao monta nenhuma juncao: tudo vem da visao <code>vw_boletim_turma</code>,
+  criada em <code>sql/04_visoes.sql</code>. A media e ponderada pelo peso de cada
+  avaliacao, e o denominador considera so o que ja foi lancado.
+</p>
+<form method="get" class="filtros">
+  <label>Ano letivo<select name="ano">
+    <% anos.forEach(function (a) { %><option value="<%= a %>" <%= String(f.ano)===String(a)?'selected':'' %>><%= a %></option><% }); %>
+  </select></label>
+  <label>Turma<select name="turma"><option value="">todas</option>
+    <% turmas.forEach(function (t) { %><option value="<%= t %>" <%= f.turma===t?'selected':'' %>><%= t %></option><% }); %>
+  </select></label>
+  <label>Aluno<input name="aluno" value="<%= f.aluno || '' %>" placeholder="parte do nome"></label>
+  <label>Media abaixo de<input type="number" step="0.1" name="media_abaixo" value="<%= f.mediaAbaixo == null ? '' : f.mediaAbaixo %>" placeholder="6"></label>
+  <button type="submit">Gerar</button>
+</form>
+
+<h2>Resumo por turma</h2>
+<% if (!resumo.length) { %><p class="vazio">Sem dados para esse filtro.</p><% } else { %>
+<table>
+  <thead><tr><th>Turma</th><th>Serie</th><th>Turno</th><th>Alunos</th>
+    <th>Media da turma</th><th>Situacoes abaixo de 6</th><th>Faltas</th></tr></thead>
+  <tbody>
+  <% resumo.forEach(function (r) { %>
+    <tr><td><%= r.turma %></td><td><%= r.serie %></td><td><%= r.turno %></td>
+      <td class="num"><%= r.alunos %></td>
+      <td class="num <%= r.media_da_turma < 6 ? 'alerta' : '' %>"><%= r.media_da_turma %></td>
+      <td class="num"><%= r.situacoes_abaixo_de_6 %></td><td class="num"><%= r.faltas %></td></tr>
+  <% }); %>
+  </tbody>
+</table>
+<% } %>
+
+<h2>Detalhe por aluno e disciplina</h2>
+<% if (!linhas.length) { %><p class="vazio">Sem dados para esse filtro.</p><% } else { %>
+<table>
+  <thead><tr><th>Turma</th><th>Aluno</th><th>Matricula</th><th>Disciplina</th>
+    <th>Previstas</th><th>Lancadas</th><th>Faltas</th><th>Media</th><th>Situacao</th></tr></thead>
+  <tbody>
+  <% linhas.forEach(function (l) { %>
+    <tr><td><%= l.turma %></td><td><%= l.aluno %></td><td><%= l.matricula %></td>
+      <td><%= l.disciplina %></td>
+      <td class="num"><%= l.avaliacoes_previstas %></td>
+      <td class="num"><%= l.notas_lancadas %></td>
+      <td class="num"><%= l.faltas %></td>
+      <td class="num <%= l.media_ponderada !== null && l.media_ponderada < 6 ? 'alerta' : '' %>"><%= l.media_ponderada === null ? '--' : l.media_ponderada %></td>
+      <td><%= l.situacao_matricula %></td></tr>
+  <% }); %>
+  </tbody>
+</table>
+<p class="contagem"><%= linhas.length %> linha(s) — limite de 500 por consulta.</p>
+<% } %>
+<%- include('_rodape') %>

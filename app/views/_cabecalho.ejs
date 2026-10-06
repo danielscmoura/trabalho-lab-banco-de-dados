@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= titulo %> — Escola UCB</title>
+  <link rel="stylesheet" href="/estilo.css">
+</head>
+<body>
+<header>
+  <div class="marca"><a href="/">Sistema Academico</a> <span class="sub">escola_ucb</span></div>
+  <% if (usuario) { %>
+    <nav>
+      <% if (usuario.perfil !== 'CONSULTA') { %>
+        <a href="/cadastros/alunos">Alunos</a>
+        <a href="/cadastros/professores">Professores</a>
+        <a href="/cadastros/turmas">Turmas</a>
+        <a href="/cadastros/disciplinas">Disciplinas</a>
+      <% } %>
+      <a href="/consultas/desempenho">Desempenho</a>
+      <a href="/consultas/carga-professor">Carga</a>
+      <a href="/relatorio">Boletim</a>
+      <% if (usuario.perfil === 'SECRETARIA') { %>
+        <a href="/matricular">Matricular</a>
+        <a href="/auditoria">Auditoria</a>
+      <% } %>
+    </nav>
+    <form method="post" action="/sair" class="sessao">
+      <span class="quem"><%= usuario.nome %> <em><%= usuario.perfil %></em></span>
+      <button type="submit" class="link">sair</button>
+    </form>
+  <% } %>
+</header>
+<main>
+  <h1><%= titulo %></h1>
+  <% if (typeof aviso !== 'undefined' && aviso) { %><p class="aviso"><%= aviso %></p><% } %>
+  <% if (typeof erro !== 'undefined' && erro) { %><p class="falha"><%= erro %></p><% } %>

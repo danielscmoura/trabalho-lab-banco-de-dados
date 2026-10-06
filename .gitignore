@@ -1,0 +1,12 @@
+# Credenciais reais — nunca versionadas. O modelo fica em app/.env.example.
+.env
+app/.env
+
+# Dependencias
+node_modules/
+app/node_modules/
+
+# Lixo de editor e de sistema
+*.log
+Thumbs.db
+desktop.ini

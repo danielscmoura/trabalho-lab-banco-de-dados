@@ -1,0 +1,40 @@
+<%- include('_cabecalho') %>
+<form method="get" class="filtros">
+  <input type="hidden" name="executar" value="1">
+  <label>Ano letivo<select name="ano"><option value="">todos</option>
+    <% anos.forEach(function (a) { %><option value="<%= a %>" <%= String(f.ano)===String(a)?'selected':'' %>><%= a %></option><% }); %>
+  </select></label>
+  <label>Turma<input name="turma" value="<%= f.turma || '' %>" placeholder="ex.: 2026-6A"></label>
+  <label>Serie<select name="serie"><option value="">todas</option>
+    <% series.forEach(function (s) { %><option value="<%= s %>" <%= f.serie===s?'selected':'' %>><%= s %></option><% }); %>
+  </select></label>
+  <label>Media ate<input type="number" step="0.1" name="media_max" value="<%= f.mediaMax == null ? '' : f.mediaMax %>" placeholder="6"></label>
+  <button type="submit">Consultar</button>
+  <a href="/consultas/desempenho">limpar</a>
+</form>
+
+<% if (linhas === null) { %>
+  <p class="vazio">Informe os filtros e clique em Consultar.</p>
+<% } else if (!linhas.length) { %>
+  <p class="vazio">Nenhum resultado para esses filtros.</p>
+<% } else { %>
+<table>
+  <thead><tr><th>Ano</th><th>Turma</th><th>Disciplina</th><th>Alunos</th><th>Notas</th>
+    <th>Media simples</th><th>Media ponderada</th><th>Faltas</th></tr></thead>
+  <tbody>
+  <% linhas.forEach(function (l) { %>
+    <tr>
+      <td><%= l.ano_letivo %></td><td><%= l.turma %></td><td><%= l.disciplina %></td>
+      <td class="num"><%= l.alunos %></td><td class="num"><%= l.notas_lancadas %></td>
+      <td class="num"><%= l.media_simples %></td>
+      <td class="num <%= l.media_ponderada < 6 ? 'alerta' : '' %>"><%= l.media_ponderada %></td>
+      <td class="num"><%= l.faltas %></td>
+    </tr>
+  <% }); %>
+  </tbody>
+</table>
+<p class="contagem"><%= linhas.length %> linha(s).</p>
+<% } %>
+<details class="sql"><summary>SQL desta tela</summary><pre><%= sql %></pre>
+<p>Os filtros viajam como parametros do prepared statement — nenhum deles entra no texto acima.</p></details>
+<%- include('_rodape') %>

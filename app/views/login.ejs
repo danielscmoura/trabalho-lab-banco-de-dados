@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar — Escola UCB</title>
+  <link rel="stylesheet" href="/estilo.css">
+</head>
+<body class="tela-login">
+  <form method="post" action="/login" class="cartao-login">
+    <h1>Sistema Academico</h1>
+    <p class="sub">Escola de educacao basica — banco <code>escola_ucb</code></p>
+    <% if (erro) { %><p class="falha"><%= erro %></p><% } %>
+    <label>Login<input name="login" autocomplete="username" autofocus required></label>
+    <label>Senha<input name="senha" type="password" autocomplete="current-password" required></label>
+    <button type="submit">Entrar</button>
+    <table class="contas">
+      <caption>Contas de demonstracao</caption>
+      <tr><td>secretaria</td><td>secretaria123</td><td>operacao completa</td></tr>
+      <tr><td>professor</td><td>professor123</td><td>lanca nota, le o resto</td></tr>
+      <tr><td>consulta</td><td>consulta123</td><td>so as visoes, sem dado pessoal</td></tr>
+    </table>
+  </form>
+</body>
+</html>

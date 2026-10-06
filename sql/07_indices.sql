@@ -1,0 +1,86 @@
+-- =====================================================================
+-- Projeto Final — Laboratorio de Banco de Dados (GPE17M40083)
+-- Etapa 2 — Indices do estudo de desempenho (B4)
+-- Arquivo: 07_indices.sql   |   Executar APOS 06_usuarios_perfis.sql
+-- =====================================================================
+-- Aqui ficam apenas os indices que o estudo JUSTIFICOU. O estudo
+-- completo — plano antes, plano depois e tempo medido — e reproduzivel
+-- com:
+--
+--     cd app && node scripts/estudo-indices.js
+--
+-- Volume medido: nota ~1.950 linhas, alocacao 320, matricula 250,
+-- avaliacao 240, pessoa 175. Tempos sao a mediana de 41 execucoes,
+-- apos 10 de aquecimento.
+-- =====================================================================
+
+USE escola_ucb;
+
+-- ---------------------------------------------------------------------
+-- 1. idx_matricula_turma_situacao  — GANHO: 0,940ms -> 0,605ms (-36%)
+--
+-- Consulta: contagem de matriculas ativas de uma turma. Roda em toda
+-- matricula, dentro da transacao e com a linha da turma travada — e
+-- enquanto ela nao termina, as outras secretarias esperam.
+--
+-- Plano antes : ref em idx_matricula_turma, filtered 48,4%, volta a
+--               tabela para conferir `situacao`
+-- Plano depois: ref em idx_matricula_turma_situacao, filtered 100%,
+--               Using index — a consulta se resolve dentro do indice
+--
+-- Ordem das colunas: id_turma primeiro, porque e o predicado de
+-- igualdade que mais reduz o conjunto; situacao em segundo, refinando
+-- dentro da turma. O inverso serviria mal: 'ATIVA' sozinho corta pouco.
+--
+-- O DROP abaixo nao e limpeza, e parte da intervencao. Na primeira
+-- tentativa criamos so o indice composto e o otimizador continuou
+-- escolhendo idx_matricula_turma — os dois servem para o `ref` em
+-- id_turma. Como o antigo e PREFIXO do novo, ele nao e apenas
+-- redundante: e concorrente, e impedia o ganho de aparecer.
+-- ---------------------------------------------------------------------
+CREATE INDEX idx_matricula_turma_situacao ON matricula (id_turma, situacao);
+DROP INDEX idx_matricula_turma ON matricula;
+
+-- ---------------------------------------------------------------------
+-- 2. idx_historico_vigente  — GANHO MODESTO: 0,376ms -> 0,314ms (-17%)
+--
+-- Consulta: qual a situacao vigente de cada aluno (RN20 — o registro
+-- em aberto e aquele com data_fim nula). Alimenta o painel e o
+-- relatorio de evasao.
+--
+-- Plano antes : ALL, varredura das 140 linhas, filtered 8%
+-- Plano depois: ref em idx_historico_vigente, filtered 80%
+--
+-- O plano melhorou muito mais do que o relogio: a 140 linhas, varrer a
+-- tabela inteira ja e barato. O ganho de 17% esta no limite do ruido de
+-- medicao, e a equipe registra isso em vez de vende-lo como otimizacao.
+-- O indice foi mantido porque o historico e a tabela que mais cresce
+-- por aluno ao longo dos anos — a varredura piora linearmente, o acesso
+-- por indice nao.
+-- ---------------------------------------------------------------------
+CREATE INDEX idx_historico_vigente ON historico_situacao_aluno (data_fim, situacao);
+
+-- =====================================================================
+-- 3. idx_nota_valor — DESCARTADO. Nao esta neste script de proposito.
+--
+-- Hipotese: um indice em nota.valor aceleraria a media das notas
+-- lancadas (`WHERE valor IS NOT NULL`), a agregacao mais frequente do
+-- boletim.
+--
+-- Medicao: 0,697ms -> 0,721ms. Nenhum ganho, e a tendencia e de leve
+-- piora.
+--
+-- Por que falhou: o filtro aceita 1.901 das 1.974 linhas — 96% da
+-- tabela. O otimizador ate passa a usar o indice (tipo `range`, com
+-- Using index), mas percorrer 96% de um indice e depois agregar nao e
+-- mais barato do que varrer a tabela de uma vez; e ha o custo de manter
+-- mais um indice a cada INSERT e UPDATE em `nota`, que e a tabela de
+-- maior movimento do modelo.
+--
+-- A licao: indice resolve SELETIVIDADE. Um predicado que aceita quase
+-- tudo nao tem o que selecionar. O ganho em 1 e 2 veio de filtros que
+-- cortam o conjunto; aqui nao havia corte a fazer.
+--
+-- Para reproduzir o resultado negativo, o caso 3 continua no script
+-- app/scripts/estudo-indices.js.
+-- =====================================================================

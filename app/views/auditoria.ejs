@@ -1,0 +1,35 @@
+<%- include('_cabecalho') %>
+<p class="intro">
+  Gravada pelos gatilhos <code>trg_nota_auditoria_au</code> e
+  <code>trg_matricula_auditoria_au</code>. A secretaria le esta tabela, mas o
+  <code>REVOKE</code> em <code>sql/06_usuarios_perfis.sql</code> tira dela INSERT, UPDATE e
+  DELETE: a aplicacao produz a trilha e nao consegue adultera-la.
+</p>
+<form method="get" class="filtros">
+  <label>Tabela<select name="tabela"><option value="">todas</option>
+    <option value="nota" <%= f.tabela==='nota'?'selected':'' %>>nota</option>
+    <option value="matricula" <%= f.tabela==='matricula'?'selected':'' %>>matricula</option>
+  </select></label>
+  <label>Usuario<input name="usuario" value="<%= f.usuario || '' %>" placeholder="login da aplicacao"></label>
+  <button type="submit">Filtrar</button>
+  <a href="/auditoria">limpar</a>
+</form>
+<% if (!linhas.length) { %>
+  <p class="vazio">Nada registrado ainda. Altere uma nota ou a situacao de uma matricula e volte aqui.</p>
+<% } else { %>
+<table>
+  <thead><tr><th>Quando</th><th>Tabela</th><th>Registro</th><th>Campo</th>
+    <th>De</th><th>Para</th><th>Usuario da app</th><th>Usuario do banco</th></tr></thead>
+  <tbody>
+  <% linhas.forEach(function (l) { %>
+    <tr><td><%= l.ocorrido_em %></td><td><%= l.tabela %></td><td><%= l.chave_registro %></td>
+      <td><%= l.campo %></td>
+      <td class="de"><%= l.valor_anterior === null ? '(vazio)' : l.valor_anterior %></td>
+      <td class="para"><%= l.valor_novo === null ? '(vazio)' : l.valor_novo %></td>
+      <td><%= l.usuario_app %></td><td><%= l.usuario_banco %></td></tr>
+  <% }); %>
+  </tbody>
+</table>
+<p class="contagem"><%= linhas.length %> registro(s).</p>
+<% } %>
+<%- include('_rodape') %>

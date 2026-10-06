@@ -1,0 +1,40 @@
+<%- include('_cabecalho') %>
+<form method="get" class="filtros">
+  <label>Buscar<input name="busca" value="<%= busca %>" placeholder="nome ou codigo"></label>
+  <button type="submit">Filtrar</button>
+  <% if (busca) { %><a href="/cadastros/<%= slug %>">limpar</a><% } %>
+  <% if (usuario.perfil === 'SECRETARIA') { %>
+    <a class="botao" href="/cadastros/<%= slug %>/novo">+ Novo <%= ent.singular %></a>
+  <% } %>
+</form>
+
+<% if (!linhas.length) { %>
+  <p class="vazio">Nenhum registro encontrado.</p>
+<% } else { %>
+<table>
+  <thead><tr>
+    <% ent.colunasLista.forEach(function (c) { %><th><%= c.rotulo %></th><% }); %>
+    <% if (usuario.perfil === 'SECRETARIA') { %><th></th><% } %>
+  </tr></thead>
+  <tbody>
+  <% linhas.forEach(function (l) { %>
+    <tr>
+      <% ent.colunasLista.forEach(function (c) { %>
+        <td><%= l[c.campo] === null || l[c.campo] === undefined ? '--' : l[c.campo] %></td>
+      <% }); %>
+      <% if (usuario.perfil === 'SECRETARIA') { %>
+      <td class="acoes">
+        <a href="/cadastros/<%= slug %>/<%= l[ent.chave] %>/editar">editar</a>
+        <form method="post" action="/cadastros/<%= slug %>/<%= l[ent.chave] %>/excluir"
+              onsubmit="return confirm('Excluir este registro?')">
+          <button type="submit" class="link perigo">excluir</button>
+        </form>
+      </td>
+      <% } %>
+    </tr>
+  <% }); %>
+  </tbody>
+</table>
+<p class="contagem"><%= linhas.length %> registro(s).</p>
+<% } %>
+<%- include('_rodape') %>

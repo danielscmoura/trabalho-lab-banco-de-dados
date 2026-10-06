@@ -1,0 +1,37 @@
+<%- include('_cabecalho') %>
+<form method="get" class="filtros">
+  <input type="hidden" name="executar" value="1">
+  <label>Ano letivo<select name="ano"><option value="">todos</option>
+    <% anos.forEach(function (a) { %><option value="<%= a %>" <%= String(f.ano)===String(a)?'selected':'' %>><%= a %></option><% }); %>
+  </select></label>
+  <label>Titulacao<select name="titulacao"><option value="">todas</option>
+    <% ['GRADUACAO','ESPECIALIZACAO','MESTRADO','DOUTORADO'].forEach(function (t) { %>
+      <option value="<%= t %>" <%= f.titulacao===t?'selected':'' %>><%= t %></option><% }); %>
+  </select></label>
+  <label>Aulas/semana a partir de<input type="number" name="carga_min" value="<%= f.cargaMin == null ? '' : f.cargaMin %>" placeholder="10"></label>
+  <label class="inline"><input type="checkbox" name="so_ativos" <%= f.soAtivos ? 'checked' : '' %>> So professores ativos</label>
+  <button type="submit">Consultar</button>
+  <a href="/consultas/carga-professor">limpar</a>
+</form>
+
+<% if (linhas === null) { %>
+  <p class="vazio">Informe os filtros e clique em Consultar.</p>
+<% } else if (!linhas.length) { %>
+  <p class="vazio">Nenhum resultado para esses filtros.</p>
+<% } else { %>
+<table>
+  <thead><tr><th>Professor</th><th>Titulacao</th><th>Turmas</th><th>Disciplinas</th>
+    <th>Aulas/semana</th><th>Turmas que rege</th></tr></thead>
+  <tbody>
+  <% linhas.forEach(function (l) { %>
+    <tr><td><%= l.professor %></td><td><%= l.titulacao %></td>
+      <td class="num"><%= l.turmas %></td><td class="num"><%= l.disciplinas %></td>
+      <td class="num <%= l.aulas_semana > 20 ? 'alerta' : '' %>"><%= l.aulas_semana %></td>
+      <td class="num"><%= l.turmas_que_rege %></td></tr>
+  <% }); %>
+  </tbody>
+</table>
+<p class="contagem"><%= linhas.length %> professor(es).</p>
+<% } %>
+<details class="sql"><summary>SQL desta tela</summary><pre><%= sql %></pre></details>
+<%- include('_rodape') %>

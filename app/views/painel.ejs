@@ -1,0 +1,12 @@
+<%- include('_cabecalho') %>
+<p class="intro">
+  Voce esta conectado como <strong><%= usuario.perfil %></strong>. A aplicacao usa um
+  usuario MySQL diferente para cada perfil, entao o que aparece no menu e o mesmo
+  que o banco autoriza — se a tela fosse contornada, o GRANT continuaria valendo.
+</p>
+<div class="cartoes">
+  <% numeros.forEach(function (n) { %>
+    <div class="cartao"><span class="valor"><%= n.valor %></span><span class="rotulo"><%= n.rotulo %></span></div>
+  <% }); %>
+</div>
+<%- include('_rodape') %>

@@ -1,0 +1,39 @@
+<%- include('_cabecalho') %>
+<p class="intro">
+  Esta e a operacao transacional do projeto. Um clique altera <strong>tres tabelas</strong>:
+  cria a <code>matricula</code>, move o <code>historico_situacao_aluno</code> e abre uma linha
+  em <code>nota</code> para cada avaliacao ja cadastrada na turma. Ou tudo acontece, ou nada.
+</p>
+<form method="post" class="form-registro">
+  <label class="campo"><span>Aluno *</span>
+    <select name="id_aluno" required>
+      <option value="">-- escolha --</option>
+      <% alunos.forEach(function (a) { %>
+        <option value="<%= a.id_pessoa %>"><%= a.matricula %> — <%= a.nome %></option>
+      <% }); %>
+    </select>
+  </label>
+  <label class="campo"><span>Turma *</span>
+    <select name="id_turma" required>
+      <option value="">-- escolha --</option>
+      <% turmas.forEach(function (t) { %>
+        <option value="<%= t.id_turma %>"><%= t.codigo %> (<%= t.serie %>/<%= t.turno %>) — <%= t.ativas %> de <%= t.capacidade %> vagas</option>
+      <% }); %>
+    </select>
+    <small>A RN30 e conferida dentro da transacao, com a linha da turma travada.</small>
+  </label>
+  <label class="campo"><span>Data da matricula</span>
+    <input type="date" name="data_matricula" value="<%= new Date().toISOString().slice(0,10) %>">
+  </label>
+  <label class="campo destaque">
+    <span>Simular falha no meio da transacao</span>
+    <input type="checkbox" name="simular_falha">
+    <small>
+      Para a demonstracao de B3: as tres tabelas sao alteradas e, logo antes do COMMIT,
+      um erro e levantado de proposito. Marque, envie, e confira depois que o aluno
+      <strong>nao</strong> ficou matriculado — o ROLLBACK devolveu tudo.
+    </small>
+  </label>
+  <div class="botoes"><button type="submit">Matricular</button></div>
+</form>
+<%- include('_rodape') %>
