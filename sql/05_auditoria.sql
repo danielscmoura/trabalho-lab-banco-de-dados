@@ -34,6 +34,12 @@
 
 USE escola_ucb;
 
+-- Os gatilhos moram em `nota` e `matricula`, nao em `auditoria` — apagar a
+-- tabela abaixo NAO os remove. Sem estes dois DROP, reexecutar o script
+-- falha com "Trigger already exists".
+DROP TRIGGER IF EXISTS trg_nota_auditoria_au;
+DROP TRIGGER IF EXISTS trg_matricula_auditoria_au;
+
 DROP TABLE IF EXISTS auditoria;
 
 CREATE TABLE auditoria (
