@@ -56,7 +56,7 @@ A aplicação sobe em `http://localhost:3000`. Contas de demonstração:
 |---|---|---|---|
 | `secretaria` | `secretaria123` | SECRETARIA | Operação completa: CRUD, matrícula, auditoria |
 | `professor` | `professor123` | PROFESSOR | Lança e corrige nota; lê o resto |
-| `consulta` | `consulta123` | CONSULTA | Só as visões, sem nenhum dado pessoal |
+| `consulta` | `consulta123` | CONSULTA | Só as visões, sem nenhum dado pessoal |    
 
 > O `.env` **não é versionado**. Se faltar alguma variável, a aplicação não sobe — ela aborta no boot listando o que falta, em vez de falhar depois na primeira consulta.
 
